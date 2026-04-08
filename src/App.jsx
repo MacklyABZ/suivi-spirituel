@@ -225,7 +225,7 @@ function App() {
 
       const profilesData = Array.isArray(savedProfiles) && savedProfiles.length
         ? savedProfiles
-        : [{ id: crypto.randomUUID(), name: 'Pélagie', pin: '', role: 'member', createdAt: new Date().toISOString() }];
+        : [{ id: crypto.randomUUID(), name: 'Jacques A.', pin: '', role: 'member', createdAt: new Date().toISOString() }];
 
       const activeId = savedActiveId || profilesData[0].id;
       setProfiles(profilesData);
