@@ -226,7 +226,7 @@ function reportText(entry, profileName) {
     `📚 Littérature chrétienne : ${computeLiteratureTotal(entry)} pages`,
     literatureLines.length ? literatureLines.join('\n') : '- Aucune lecture saisie',
     '',
-    `Prière en Groupe : ${entry.prayerGroup ? 'oui' : 'non'}`,
+    `Prière en groupe : ${entry.prayerGroup ? 'oui' : 'non'}`,
     `Jeûne : ${fastingInfo || 'non'}`,
     `Confession of Sin : ${entry.confession ? 'oui' : 'non'}`,
     `Retraite personnelle : ${entry.retreat ? 'oui' : 'non'}`,
@@ -311,7 +311,7 @@ function App() {
 
       const profilesData = Array.isArray(savedProfiles) && savedProfiles.length
         ? savedProfiles
-        : [{ id: crypto.randomUUID(), name: 'Jacques A.', pin: '', role: 'member', createdAt: new Date().toISOString() }];
+        : [{ id: crypto.randomUUID(), name: 'Jacques A', pin: '', role: 'member', createdAt: new Date().toISOString() }];
 
       const activeId = savedActiveId || profilesData[0].id;
       setProfiles(profilesData);
@@ -532,7 +532,7 @@ function App() {
 
   function exportCsv() {
     const rows = [
-      ['Profil', 'Date', 'Meditation', 'Priere', 'Chapitres', 'Pages', 'JeuneJours', 'TypeJeune', 'Evangelisation', 'Prière en Groupe', 'Confession', 'Retraite', 'EtudeJC']
+      ['Profil', 'Date', 'Meditation', 'Priere', 'Chapitres', 'Pages', 'JeuneJours', 'TypeJeune', 'Evangelisation', 'Prière en groupe', 'Confession', 'Retraite', 'EtudeJC']
     ];
     entries.forEach((entry) => {
       const profileName = profiles.find((p) => p.id === entry.profileId)?.name || 'Inconnu';
@@ -781,7 +781,7 @@ function App() {
                   />
                   <div className="muted inline-note">Format attendu : hh:mm</div>
                 </div>
-                <Toggle label="Prière en Groupe" checked={form.prayerGroup} onChange={(v) => updateField('prayerGroup', v)} />
+                <Toggle label="Prière en groupe" checked={form.prayerGroup} onChange={(v) => updateField('prayerGroup', v)} />
                 <Toggle label="Confession of Sin" checked={form.confession} onChange={(v) => updateField('confession', v)} />
                 <Toggle label="Retraite personnelle" checked={form.retreat} onChange={(v) => updateField('retreat', v)} />
                 <Toggle label="Étude biblique avec JC" checked={form.bibleStudyJC} onChange={(v) => updateField('bibleStudyJC', v)} />
