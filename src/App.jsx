@@ -77,7 +77,7 @@ const defaultBackgrounds = [
 ];
 
 const defaultEncouragement = 'Sois fidèle dans les petites choses 🙏🏼🙇🏽‍♀️❤️';
-const defaultLibraryCatalog = ['Le chemin de l'amour pour le Seigneur by ZTF', 'Le chemin de la prière victorieuse by ZTF '];
+const defaultLibraryCatalog = ['Le chemin de l'amour pour le Seigneur by ZTF', 'Le chemin de la prière victorieuse by ZTF'];
 
 const emptyEntry = () => ({
   id: crypto.randomUUID(),
