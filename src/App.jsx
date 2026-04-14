@@ -8,8 +8,8 @@ import {
   CheckCircle2,
   ChevronRight,
   Cloud,
-  CloudDownload,
-  CloudUpload,
+  Download,
+  Upload,
   Copy,
   Download,
   Flame,
@@ -955,8 +955,8 @@ function App() {
               <div className="quick-actions section-top">
                 <button className="btn primary" onClick={exportJson}><Download size={16} /> Export JSON</button>
                 <button className="btn secondary" onClick={shareBackupFile}><Share2 size={16} /> Partager la sauvegarde</button>
-                <button className="btn secondary" onClick={uploadBackupToDrive} disabled={cloudBusy}><CloudUpload size={16} /> Sauvegarder Drive</button>
-                <button className="btn secondary" onClick={restoreBackupFromDrive} disabled={cloudBusy}><CloudDownload size={16} /> Restaurer Drive</button>
+                <button className="btn secondary" onClick={uploadBackupToDrive} disabled={cloudBusy}><Upload size={16} /> Sauvegarder Drive</button>
+                <button className="btn secondary" onClick={restoreBackupFromDrive} disabled={cloudBusy}><Download size={16} /> Restaurer Drive</button>
               </div>
             </Card>
 
@@ -1304,8 +1304,8 @@ function App() {
                   ) : (
                     <button className="btn secondary" onClick={disconnectGoogle}><LogOut size={16} /> Déconnecter Google</button>
                   )}
-                  <button className="btn secondary" onClick={uploadBackupToDrive} disabled={!cloudConfig.googleClientId || cloudBusy}><CloudUpload size={16} /> Sauvegarder maintenant</button>
-                  <button className="btn secondary" onClick={restoreBackupFromDrive} disabled={!cloudConfig.googleClientId || cloudBusy}><CloudDownload size={16} /> Restaurer depuis Drive</button>
+                  <button className="btn secondary" onClick={uploadBackupToDrive} disabled={!cloudConfig.googleClientId || cloudBusy}><Upload size={16} /> Sauvegarder maintenant</button>
+                  <button className="btn secondary" onClick={restoreBackupFromDrive} disabled={!cloudConfig.googleClientId || cloudBusy}><Download size={16} /> Restaurer depuis Drive</button>
                   <button className="btn secondary" onClick={connectGoogle} disabled={!cloudConfig.googleClientId || cloudBusy}><RefreshCcw size={16} /> Rafraîchir la session</button>
                 </div>
                 <ol className="plain-list numbered-list">
