@@ -11,7 +11,6 @@ import {
   Download,
   Upload,
   Copy,
-  Download,
   Flame,
   Heart,
   Image as ImageIcon,
@@ -28,7 +27,6 @@ import {
   Smartphone,
   Sparkles,
   Trash2,
-  Upload,
   User,
   Users
 } from 'lucide-react';
