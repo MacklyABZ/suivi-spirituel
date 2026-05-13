@@ -46,6 +46,7 @@ const bibleBookChapters = {
 const bibleBooks = Object.keys(bibleBookChapters);
 const monthNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 const GOOGLE_SCRIPT_ID = 'google-identity-services';
+const GOOGLE_CLIENT_ID = '1056461915937-b3hovlcrt3b3kjf01cjjnuq89bpa0oll.apps.googleusercontent.com';
 const DRIVE_FILE_NAME = 'suivi-spirituel-backup.json';
 
 const db = localforage.createInstance({
@@ -62,7 +63,6 @@ const defaultGoals = {
 };
 
 const defaultCloudConfig = {
-  googleClientId: '',
   autoBackupOnSave: false,
   lastCloudBackupAt: '',
   lastCloudRestoreAt: ''
@@ -175,7 +175,7 @@ function minutesToHHMM(minutes) {
   const total = Math.max(0, Number(minutes) || 0);
   const h = String(Math.floor(total / 60)).padStart(2, '0');
   const m = String(total % 60).padStart(2, '0');
-  return `${h}:${m}`;
+  return `${h}h${m}`;
 }
 
 function weekStart(dateStr) {
@@ -384,7 +384,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!cloudConfig.googleClientId) return;
     if (window.google?.accounts?.oauth2) {
       setGoogleReady(true);
       return;
@@ -398,7 +397,7 @@ function App() {
     script.onload = () => setGoogleReady(true);
     script.onerror = () => setStatus('Impossible de charger la connexion Google.');
     document.head.appendChild(script);
-  }, [cloudConfig.googleClientId]);
+  }, []);
 
   const activeProfile = useMemo(() => profiles.find((item) => item.id === activeProfileId) || profiles[0], [profiles, activeProfileId]);
 
@@ -721,10 +720,10 @@ function App() {
   }
 
   function createGoogleTokenClient() {
-    if (!window.google?.accounts?.oauth2 || !cloudConfig.googleClientId) return null;
+    if (!window.google?.accounts?.oauth2 || !GOOGLE_CLIENT_ID) return null;
     if (!tokenClientRef.current) {
       tokenClientRef.current = window.google.accounts.oauth2.initTokenClient({
-        client_id: cloudConfig.googleClientId,
+        client_id: GOOGLE_CLIENT_ID,
         scope: 'https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/userinfo.email',
         callback: () => {}
       });
@@ -766,8 +765,8 @@ function App() {
 
   async function connectGoogle() {
     try {
-      if (!cloudConfig.googleClientId) {
-        setStatus('Ajoute d’abord ton Google Client ID dans les réglages cloud.');
+      if (!googleReady) {
+        setStatus('Connexion Google pas encore prête. Recharge la page puis réessaie.');
         return;
       }
       await requestGoogleAccessToken('consent');
@@ -1286,10 +1285,11 @@ function App() {
 
             <Card title="Cloud Google Drive" icon={<Settings2 size={18} />}>
               <div className="stack-sm">
-                <div>
-                  <label className="label">Google Client ID OAuth</label>
-                  <input className="input" value={cloudConfig.googleClientId} onChange={(e) => setCloudField('googleClientId', e.target.value.trim())} placeholder="Colle ici le Client ID Google" />
-                  <div className="muted inline-note">À créer dans Google Cloud Console. Type recommandé: application Web, avec ton domaine Vercel autorisé.</div>
+                <div className="info-box">
+                  <strong>Connexion Google intégrée</strong>
+                  <div className="muted inline-note">
+                    Le Client ID OAuth est déjà configuré dans l’application. Chaque utilisateur doit simplement se connecter avec son propre compte Google.
+                  </div>
                 </div>
                 <Toggle label="Sauvegarder automatiquement après chaque enregistrement" checked={cloudConfig.autoBackupOnSave} onChange={(v) => setCloudField('autoBackupOnSave', v)} />
                 <div className="grid two">
@@ -1298,20 +1298,19 @@ function App() {
                 </div>
                 <div className="quick-actions">
                   {!googleToken ? (
-                    <button className="btn primary" onClick={connectGoogle} disabled={!cloudConfig.googleClientId || !googleReady}><LogIn size={16} /> Se connecter avec Google</button>
+                    <button className="btn primary" onClick={connectGoogle} disabled={!googleReady}><LogIn size={16} /> Se connecter avec Google</button>
                   ) : (
                     <button className="btn secondary" onClick={disconnectGoogle}><LogOut size={16} /> Déconnecter Google</button>
                   )}
-                  <button className="btn secondary" onClick={uploadBackupToDrive} disabled={!cloudConfig.googleClientId || cloudBusy}><Upload size={16} /> Sauvegarder maintenant</button>
-                  <button className="btn secondary" onClick={restoreBackupFromDrive} disabled={!cloudConfig.googleClientId || cloudBusy}><Download size={16} /> Restaurer depuis Drive</button>
-                  <button className="btn secondary" onClick={connectGoogle} disabled={!cloudConfig.googleClientId || cloudBusy}><RefreshCcw size={16} /> Rafraîchir la session</button>
+                  <button className="btn secondary" onClick={uploadBackupToDrive} disabled={cloudBusy}><Upload size={16} /> Sauvegarder maintenant</button>
+                  <button className="btn secondary" onClick={restoreBackupFromDrive} disabled={cloudBusy}><Download size={16} /> Restaurer depuis Drive</button>
+                  <button className="btn secondary" onClick={connectGoogle} disabled={cloudBusy || !googleReady}><RefreshCcw size={16} /> Rafraîchir la session</button>
                 </div>
                 <ol className="plain-list numbered-list">
-                  <li>Créer un projet Google Cloud.</li>
-                  <li>Activer Google Drive API.</li>
-                  <li>Créer un OAuth Client ID de type Web.</li>
-                  <li>Ajouter ton domaine Vercel dans les origines JavaScript autorisées.</li>
-                  <li>Coller le Client ID ici puis se connecter.</li>
+                  <li>Cliquer sur “Se connecter avec Google”.</li>
+                  <li>Autoriser l’accès demandé.</li>
+                  <li>Cliquer sur “Sauvegarder maintenant”.</li>
+                  <li>Activer l’auto-sauvegarde pour sécuriser chaque journée.</li>
                 </ol>
               </div>
             </Card>
